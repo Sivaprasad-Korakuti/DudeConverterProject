@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DudeConvert - Format Management Core</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+    </style>
+</head>
+
+<body class="bg-slate-50 antialiased text-slate-900 min-h-screen flex flex-col justify-between">
+
+    <input type="hidden" id="authCheckFlag" th:value="${username != null ? 'true' : 'false'}">
+
+    <header
+        class="bg-white border-b border-slate-200/80 sticky top-0 z-40 px-8 py-4 flex justify-between items-center shadow-sm">
+        <div class="flex items-center gap-2 cursor-pointer" onclick="location.href='/'">
+            <div
+                class="h-9 w-9 rounded-xl bg-gradient-to-tr from-indigo-600 to-purple-600 flex items-center justify-center text-white font-black text-lg">
+                D</div>
+            <div class="text-xl font-extrabold tracking-tight">Dude<span
+                    class="text-indigo-600 font-black">Convert</span></div>
+        </div>
+        <div class="flex items-center gap-6 text-sm font-semibold">
+            <a href="/about" class="text-slate-600 hover:text-indigo-600">About Us</a>
+            <div th:if="${username != null}" class="flex items-center gap-4">
+                <span class="text-slate-700 bg-slate-100 px-3 py-1.5 rounded-xl font-medium"
+                    th:text="'Hello, ' + ${username}"></span>
+                <a href="/logout" class="text-red-500 hover:text-red-700">Logout</a>
+            </div>
+            <div th:if="${username == null}" class="flex items-center gap-3">
+                <a href="/login" class="text-slate-600 hover:text-indigo-600">Sign In</a>
+                <a href="/signup"
+                    class="bg-indigo-600 text-white px-4 py-2 rounded-xl hover:bg-indigo-700 transition-all shadow-md shadow-indigo-100">Sign
+                    Up</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-8 pt-16 pb-24 w-full flex-grow">
+        <section class="text-center pb-12">
+            <h1 class="text-4xl font-extrabold tracking-tight text-slate-900 mb-2">Multi-Format Conversion Space</h1>
+            <p class="text-slate-500 max-w-md mx-auto text-sm">Convert and optimize files instantly. Please authenticate
+                to unlock processing grids.</p>
+        </section>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <div onclick="verifyAuthAndOpen('mergeModal')"
+                class="bg-white p-6 rounded-2xl border border-slate-200/60 shadow-sm hover:shadow-xl cursor-pointer transition-all transform hover:-translate-y-1">
+                <div
+                    class="w-10 h-10 bg-red-100 text-red-600 rounded-xl flex items-center justify-center mb-3 font-bold">
+                    M</div>
+                <h3 class="font-bold text-slate-800 text-sm mb-1">Merge PDF</h3>
+                <p class="text-xs text-slate-400">Combine file lists cleanly.</p>
+            </div>
+            <div onclick="verifyAuthAndOpen('splitModal')"
+                class="bg-white p-6 rounded-2xl border border-slate-200/60 shadow-sm hover:shadow-xl cursor-pointer transition-all transform hover:-translate-y-1">
+                <div
+                    class="w-10 h-10 bg-orange-100 text-orange-600 rounded-xl flex items-center justify-center mb-3 font-bold">
+                    S</div>
+                <h3 class="font-bold text-slate-800 text-sm mb-1">Split PDF</h3>
+                <p class="text-xs text-slate-400">Extract matching document sets.</p>
+            </div>
+            <div onclick="verifyAuthAndOpen('txtModal')"
+                class="bg-white p-6 rounded-2xl border border-slate-200/60 shadow-sm hover:shadow-xl cursor-pointer transition-all transform hover:-translate-y-1">
+                <div
+                    class="w-10 h-10 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center mb-3 font-bold">
+                    P2T</div>
+                <h3 class="font-bold text-slate-800 text-sm mb-1">PDF to TXT</h3>
+                <p class="text-xs text-slate-400">Extract strings out cleanly.</p>
+            </div>
+            <div onclick="verifyAuthAndOpen('docxModal')"
+                class="bg-white p-6 rounded-2xl border border-slate-200/60 shadow-sm hover:shadow-xl cursor-pointer transition-all transform hover:-translate-y-1">
+                <div
+                    class="w-10 h-10 bg-indigo-100 text-indigo-600 rounded-xl flex items-center justify-center mb-3 font-bold">
+                    W2P</div>
+                <h3 class="font-bold text-slate-800 text-sm mb-1">Word to PDF</h3>
+                <p class="text-xs text-slate-400">Compile DOCX structures smoothly.</p>
+            </div>
+            <div onclick="verifyAuthAndOpen('toPdfTxtModal')"
+                class="bg-white p-6 rounded-2xl border border-slate-200/60 shadow-sm hover:shadow-xl cursor-pointer transition-all transform hover:-translate-y-1">
+                <div
+                    class="w-10 h-10 bg-teal-100 text-teal-600 rounded-xl flex items-center justify-center mb-3 font-bold">
+                    T2P</div>
+                <h3 class="font-bold text-slate-800 text-sm mb-1">TXT to PDF</h3>
+                <p class="text-xs text-slate-400">Render plain texts to PDF sheets.</p>
+            </div>
+            <div onclick="verifyAuthAndOpen('toDocxModal')"
+                class="bg-white p-6 rounded-2xl border border-slate-200/60 shadow-sm hover:shadow-xl cursor-pointer transition-all transform hover:-translate-y-1">
+                <div
+                    class="w-10 h-10 bg-purple-100 text-purple-600 rounded-xl flex items-center justify-center mb-3 font-bold">
+                    P2W</div>
+                <h3 class="font-bold text-slate-800 text-sm mb-1">PDF to Word</h3>
+                <p class="text-xs text-slate-400">Generate structured DOCX sheets.</p>
+            </div>
+            <div onclick="verifyAuthAndOpen('compressModal')"
+                class="bg-white p-6 rounded-2xl border border-slate-200/60 shadow-sm hover:shadow-xl cursor-pointer transition-all transform hover:-translate-y-1">
+                <div
+                    class="w-10 h-10 bg-emerald-100 text-emerald-600 rounded-xl flex items-center justify-center mb-3 font-bold">
+                    C</div>
+                <h3 class="font-bold text-slate-800 text-sm mb-1">Universal Compressor</h3>
+                <p class="text-xs text-slate-400">Shrink any file format instantly.</p>
+            </div>
+        </div>
+    </main>
+
+    <div id="mergeModal"
+        class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center hidden px-4">
+        <div class="bg-white w-full max-w-md rounded-2xl p-6 shadow-xl">
+            <div class="flex justify-between mb-4">
+                <h2 class="text-base font-bold text-slate-800">Merge PDF</h2><button onclick="closeModal('mergeModal')"
+                    class="text-xl font-bold text-slate-400 hover:text-slate-600">&times;</button>
+            </div>
+            <form action="/merge" method="POST" enctype="multipart/form-data">
+                <div class="dropzone border-2 border-dashed border-slate-200 rounded-xl p-8 bg-slate-50 text-center cursor-pointer"
+                    data-target="mergeInput">
+                    <p class="text-xs font-semibold text-slate-500">Drag files here or click to browse</p>
+                    <input type="file" name="files" id="mergeInput" multiple accept="application/pdf" class="hidden"
+                        required>
+                    <div class="file-preview text-[11px] text-indigo-600 mt-2 hidden"></div>
+                </div>
+                <div class="flex justify-end gap-2 mt-4"><button type="button" onclick="closeModal('mergeModal')"
+                        class="text-xs border px-3 py-2 rounded-lg">Cancel</button><button
+                        class="text-xs bg-indigo-600 text-white px-4 py-2 rounded-lg font-bold">Process</button></div>
+            </form>
+        </div>
+    </div>
+
+    <div id="splitModal"
+        class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center hidden px-4">
+        <div class="bg-white w-full max-w-md rounded-2xl p-6 shadow-xl">
+            <div class="flex justify-between mb-4">
+                <h2 class="text-base font-bold text-slate-800">Split PDF Pages</h2><button
+                    onclick="closeModal('splitModal')"
+                    class="text-xl font-bold text-slate-400 hover:text-slate-600">&times;</button>
+            </div>
+            <form action="/split" method="POST" enctype="multipart/form-data">
+                <div class="dropzone border-2 border-dashed border-slate-200 rounded-xl p-8 bg-slate-50 text-center cursor-pointer"
+                    data-target="splitInput">
+                    <p class="text-xs font-semibold text-slate-500">Drag or click to choose file</p>
+                    <input type="file" name="file" id="splitInput" accept="application/pdf" class="hidden" required>
+                    <div class="file-preview text-[11px] text-orange-600 mt-2 hidden"></div>
+                </div>
+                <div class="flex justify-end gap-2 mt-4"><button type="button" onclick="closeModal('splitModal')"
+                        class="text-xs border px-3 py-2 rounded-lg">Cancel</button><button
+                        class="text-xs bg-orange-500 text-white px-4 py-2 rounded-lg font-bold">Process</button></div>
+            </form>
+        </div>
+    </div>
+
+    <div id="txtModal"
+        class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center hidden px-4">
+        <div class="bg-white w-full max-w-md rounded-2xl p-6 shadow-xl">
+            <div class="flex justify-between mb-4">
+                <h2 class="text-base font-bold text-slate-800">PDF to Text Converter</h2><button
+                    onclick="closeModal('txtModal')"
+                    class="text-xl font-bold text-slate-400 hover:text-slate-600">&times;</button>
+            </div>
+            <form action="/pdf-to-txt" method="POST" enctype="multipart/form-data">
+                <div class="dropzone border-2 border-dashed border-slate-200 rounded-xl p-8 bg-slate-50 text-center cursor-pointer"
+                    data-target="txtInput">
+                    <p class="text-xs font-semibold text-slate-500">Upload PDF to string pull</p>
+                    <input type="file" name="file" id="txtInput" accept="application/pdf" class="hidden" required>
+                    <div class="file-preview text-[11px] text-blue-600 mt-2 hidden"></div>
+                </div>
+                <div class="flex justify-end gap-2 mt-4"><button type="button" onclick="closeModal('txtModal')"
+                        class="text-xs border px-3 py-2 rounded-lg">Cancel</button><button
+                        class="text-xs bg-blue-600 text-white px-4 py-2 rounded-lg font-bold">Process</button></div>
+            </form>
+        </div>
+    </div>
+
+    <div id="docxModal"
+        class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center hidden px-4">
+        <div class="bg-white w-full max-w-md rounded-2xl p-6 shadow-xl">
+            <div class="flex justify-between mb-4">
+                <h2 class="text-base font-bold text-slate-800">Word to PDF Layout</h2><button
+                    onclick="closeModal('docxModal')"
+                    class="text-xl font-bold text-slate-400 hover:text-slate-600">&times;</button>
+            </div>
+            <form action="/docx-to-pdf" method="POST" enctype="multipart/form-data">
+                <div class="dropzone border-2 border-dashed border-slate-200 rounded-xl p-8 bg-slate-50 text-center cursor-pointer"
+                    data-target="docxInput">
+                    <p class="text-xs font-semibold text-slate-500">Select docx source element</p>
+                    <input type="file" name="file" id="docxInput" accept=".docx" class="hidden" required>
+                    <div class="file-preview text-[11px] text-indigo-600 mt-2 hidden"></div>
+                </div>
+                <div class="flex justify-end gap-2 mt-4"><button type="button" onclick="closeModal('docxModal')"
+                        class="text-xs border px-3 py-2 rounded-lg">Cancel</button><button
+                        class="text-xs bg-indigo-600 text-white px-4 py-2 rounded-lg font-bold">Process</button></div>
+            </form>
+        </div>
+    </div>
+
+    <div id="toPdfTxtModal"
+        class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center hidden px-4">
+        <div class="bg-white w-full max-w-md rounded-2xl p-6 shadow-xl">
+            <div class="flex justify-between mb-4">
+                <h2 class="text-base font-bold text-slate-800">TXT to PDF</h2><button
+                    onclick="closeModal('toPdfTxtModal')"
+                    class="text-xl font-bold text-slate-400 hover:text-slate-600">&times;</button>
+            </div>
+            <form action="/txt-to-pdf" method="POST" enctype="multipart/form-data">
+                <div class="dropzone border-2 border-dashed border-slate-200 rounded-xl p-8 bg-slate-50 text-center cursor-pointer"
+                    data-target="toPdfTxtInput">
+                    <p class="text-xs font-semibold text-slate-500">Select notepad data file</p>
+                    <input type="file" name="file" id="toPdfTxtInput" accept=".txt" class="hidden" required>
+                    <div class="file-preview text-[11px] text-teal-600 mt-2 hidden"></div>
+                </div>
+                <div class="flex justify-end gap-2 mt-4"><button type="button" onclick="closeModal('toPdfTxtModal')"
+                        class="text-xs border px-3 py-2 rounded-lg">Cancel</button><button
+                        class="text-xs bg-teal-600 text-white px-4 py-2 rounded-lg font-bold">Process</button></div>
+            </form>
+        </div>
+    </div>
+
+    <div id="toDocxModal"
+        class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center hidden px-4">
+        <div class="bg-white w-full max-w-md rounded-2xl p-6 shadow-xl">
+            <div class="flex justify-between mb-4">
+                <h2 class="text-base font-bold text-slate-800">PDF to Word Layout</h2><button
+                    onclick="closeModal('toDocxModal')"
+                    class="text-xl font-bold text-slate-400 hover:text-slate-600">&times;</button>
+            </div>
+            <form action="/pdf-to-docx" method="POST" enctype="multipart/form-data">
+                <div class="dropzone border-2 border-dashed border-slate-200 rounded-xl p-8 bg-slate-50 text-center cursor-pointer"
+                    data-target="toDocxInput">
+                    <p class="text-xs font-semibold text-slate-500">Staging pdf file input context</p>
+                    <input type="file" name="file" id="toDocxInput" accept="application/pdf" class="hidden" required>
+                    <div class="file-preview text-[11px] text-purple-600 mt-2 hidden"></div>
+                </div>
+                <div class="flex justify-end gap-2 mt-4"><button type="button" onclick="closeModal('toDocxModal')"
+                        class="text-xs border px-3 py-2 rounded-lg">Cancel</button><button
+                        class="text-xs bg-purple-600 text-white px-4 py-2 rounded-lg font-bold">Process</button></div>
+            </form>
+        </div>
+    </div>
+
+    <div id="compressModal"
+        class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center hidden px-4">
+        <div class="bg-white w-full max-w-md rounded-2xl p-6 shadow-xl">
+            <div class="flex justify-between mb-3">
+                <h2 class="text-base font-bold text-slate-800">Smart Universal Compressor</h2><button type="button"
+                    onclick="closeModal('compressModal')"
+                    class="text-xl font-bold text-slate-400 hover:text-slate-600">&times;</button>
+            </div>
+            <form action="/compress" method="POST" enctype="multipart/form-data" class="space-y-4">
+                <div class="dropzone border-2 border-dashed border-slate-200 rounded-xl p-6 bg-slate-50 text-center cursor-pointer"
+                    data-target="compressInput">
+                    <p class="text-xs font-semibold text-slate-500">Drag or drop ANY file here (JPG, PNG, PDF, DOCX,
+                        TXT)</p>
+                    <input type="file" name="file" id="compressInput" accept="*/*" class="hidden" required>
+                    <div class="file-preview text-[11px] text-emerald-600 mt-2 font-bold hidden"></div>
+                </div>
+                <div class="space-y-2 border-t pt-3">
+                    <label class="block text-xs font-bold text-slate-500 uppercase">Compression Level (No Quality
+                        Loss)</label>
+                    <select name="reductionLevel"
+                        class="w-full text-xs p-2.5 border rounded-lg bg-white focus:outline-indigo-500">
+                        <option value="low">Low Compression (Maximum Quality Retention)</option>
+                        <option value="medium" selected>Medium Compression (Balanced Setup)</option>
+                        <option value="high">High Compression (Maximum Size Reduction)</option>
+                    </select>
+                </div>
+                <div class="space-y-2">
+                    <label class="block text-xs font-bold text-slate-500 uppercase">Desired Target Final Size
+                        (MB)</label>
+                    <input type="number" name="targetSizeMb" min="1" max="100" value="5"
+                        class="w-full text-xs p-2.5 border rounded-lg focus:outline-indigo-500" placeholder="e.g. 2"
+                        required>
+                </div>
+                <div class="flex justify-end gap-2 pt-2 border-t">
+                    <button type="button" onclick="closeModal('compressModal')"
+                        class="text-xs border px-3 py-2 rounded-lg">Cancel</button>
+                    <button type="submit"
+                        class="text-xs bg-emerald-600 text-white px-4 py-2 rounded-lg font-bold shadow-md">Optimize &
+                        Process</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer
+        class="bg-white border-t border-slate-200/80 w-full py-6 text-center text-xs text-slate-400 font-medium mt-12">
+        <div class="max-w-6xl mx-auto px-8 flex flex-col sm:flex-row justify-between items-center gap-2">
+            <div>&copy; 2026 DudeConvert. All processing remains on device.</div>
+            <div class="text-slate-500">
+                Crafted with passion by <span class="font-bold text-indigo-600 hover:underline cursor-pointer">Siva
+                    Prasad</span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
+        function closeModal(id) {
+            const m = document.getElementById(id);
+            m.classList.add('hidden');
+            m.querySelector('form').reset();
+            const p = m.querySelector('.file-preview');
+            if (p) p.classList.add('hidden');
+        }
+
+        // NEW: Intercept card click to verify authentication before loading modular windows
+        function verifyAuthAndOpen(modalId) {
+            const isUserLoggedIn = document.getElementById('authCheckFlag').value === 'true';
+            if (!isUserLoggedIn) {
+                alert("Authentication Required! Please Sign In or Create a Free Account to process documents.");
+                window.location.href = "/login";
+            } else {
+                openModal(modalId);
+            }
+        }
+
+        document.querySelectorAll('.dropzone').forEach(dz => {
+            const id = dz.getAttribute('data-target');
+            const inp = document.getElementById(id);
+            const prv = dz.querySelector('.file-preview');
+
+            dz.addEventListener('click', (e) => {
+                if (e.target === inp) return;
+                inp.click();
+            });
+
+            inp.addEventListener('change', () => updateFilePreviewDisplay(inp.files, prv));
+
+            dz.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                dz.classList.add('border-indigo-500', 'bg-indigo-50/10');
+            });
+
+            dz.addEventListener('dragleave', () => {
+                dz.classList.remove('border-indigo-500', 'bg-indigo-50/10');
+            });
+
+            dz.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dz.classList.remove('border-indigo-500', 'bg-indigo-50/10');
+                if (e.dataTransfer.files.length > 0) {
+                    inp.files = e.dataTransfer.files;
+                    updateFilePreviewDisplay(inp.files, prv);
+                }
+            });
+        });
+
+        function updateFilePreviewDisplay(files, prvElement) {
+            if (!prvElement) return;
+            prvElement.innerHTML = '';
+            if (files.length > 0) {
+                prvElement.classList.remove('hidden');
+                prvElement.textContent = "Selected: " + Array.from(files).map(f => f.name + " (" + (f.size / (1024 * 1024)).toFixed(2) + " MB)").join(", ");
+            } else {
+                prvElement.classList.add('hidden');
+            }
+        }
+    </script>
+</body>
+
+</html>
