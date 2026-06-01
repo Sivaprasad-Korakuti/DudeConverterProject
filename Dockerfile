@@ -2,11 +2,12 @@
 FROM maven:3.9.6-eclipse-temurin-21 AS build
 WORKDIR /app
 
-# Install JDK 26 manually inside the build container
+# Install JDK 26 manually inside the build container with fixed folder staging
 RUN apt-get update && apt-get install -y wget && \
     wget https://download.oracle.com/java/26/latest/jdk-26_linux-x64_bin.tar.gz && \
-    tar -xvf jdk-26_linux-x64_bin.tar.gz && \
-    mv jdk-26* /opt/jdk-26
+    mkdir -p /opt/jdk-26 && \
+    tar -xvf jdk-26_linux-x64_bin.tar.gz -C /opt/jdk-26 --strip-components=1 && \
+    rm jdk-26_linux-x64_bin.tar.gz
 
 ENV JAVA_HOME=/opt/jdk-26
 ENV PATH="$JAVA_HOME/bin:$PATH"
@@ -20,8 +21,8 @@ WORKDIR /app
 
 RUN apt-get update && apt-get install -y wget && \
     wget https://download.oracle.com/java/26/latest/jdk-26_linux-x64_bin.tar.gz && \
-    tar -xvf jdk-26_linux-x64_bin.tar.gz && \
-    mv jdk-26* /opt/jdk-26 && \
+    mkdir -p /opt/jdk-26 && \
+    tar -xvf jdk-26_linux-x64_bin.tar.gz -C /opt/jdk-26 --strip-components=1 && \
     rm jdk-26_linux-x64_bin.tar.gz
 
 ENV JAVA_HOME=/opt/jdk-26
